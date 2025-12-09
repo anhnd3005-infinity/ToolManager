@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd client && npm ci && npx -p typescript@~5.9.3 tsc -b && vite build",
+  "outputDirectory": "client/dist",
+  "installCommand": "npm ci && cd client && npm ci",
+  "framework": null,
+  "rootDirectory": "."
+}
+
+
+
