@@ -81,7 +81,7 @@ const AppList: React.FC = () => {
       const values = await form.validateFields();
       
       // Transform Data
-      const payload: any = {
+      const payload: Record<string, unknown> = {
         ...values,
         startDate: values.startDate ? values.startDate.format('YYYY-MM-DD') : null,
         releaseDate: values.releaseDate ? values.releaseDate.format('YYYY-MM-DD') : null,
@@ -109,19 +109,21 @@ const AppList: React.FC = () => {
 
       setLoading(true);
       if (editingApp) {
-        await updateApp(editingApp.id, payload);
+        await updateApp(editingApp.id, payload as Partial<PortfolioApp>);
         Modal.success({ title: 'Success', content: 'App updated successfully!' });
       } else {
-        const result = await createApp(payload);
+        const result = await createApp(payload as Partial<PortfolioApp>);
         console.log('Created app:', result);
         Modal.success({ title: 'Success', content: 'App created successfully!' });
       }
       setIsDrawerVisible(false);
       form.resetFields();
       await fetchApps();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Submit error:', error);
-      const errorMessage = error.response?.data?.error || error.message || error.toString();
+      const errorMessage = (error as { response?: { data?: { error?: string } }; message?: string })?.response?.data?.error || 
+                          (error as { message?: string })?.message || 
+                          String(error);
       console.error('Full error:', errorMessage);
       Modal.error({
         title: 'Error',
